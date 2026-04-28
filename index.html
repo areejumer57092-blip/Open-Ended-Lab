@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telemetry Dashboard - ECG & HRV Analysis</title>
+    <!-- Include ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <!-- Include PapaParse for CSV reading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Standard Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>The Telemetry Dashboard</h1>
+            <p class="subtitle">ECG Analysis, Peak annotation & Dynamic Spectral Density</p>
+        </div>
+        <div class="controls">
+            <label for="fileUpload" class="upload-btn">Upload ECG Data (CSV)</label>
+            <input type="file" id="fileUpload" accept=".csv" style="display: none;" />
+            <button id="loadSampleBtn" class="action-btn">Load Sample 10s Data</button>
+            <div id="statusIndicator">Awaiting Data...</div>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <!-- Row 1: Waveform -->
+        <div class="panel waveform-panel">
+            <div class="panel-header">Raw Waveform Viewer (10s window)</div>
+            <div id="chart-waveform" class="chart-container"></div>
+        </div>
+
+        <!-- Row 2: Stats & Local Map & Spectrum -->
+        <div class="panel-row three-col">
+            <div class="panel stats-panel">
+                <div class="panel-header">HRV Measures (Full Dataset)</div>
+                <div class="table-container">
+                    <table id="hrvTable">
+                        <tbody>
+                            <tr><td>Mean RR</td><td id="val-meanrr">-- ms</td></tr>
+                            <tr><td>HR</td><td id="val-hr">-- bpm</td></tr>
+                            <tr><td>SDNN</td><td id="val-sdnn">-- ms</td></tr>
+                            <tr><td>RMSSD</td><td id="val-rmssd">-- ms</td></tr>
+                            <tr><td>pNN50</td><td id="val-pnn50">-- %</td></tr>
+                            <tr><td>SD1</td><td id="val-sd1">--</td></tr>
+                            <tr><td>SD2</td><td id="val-sd2">--</td></tr>
+                            <tr><td>SD1/SD2 ratio</td><td id="val-sdratio">--</td></tr>
+                            <tr><td>LF Power</td><td id="val-lf">-- ms²</td></tr>
+                            <tr><td>HF Power</td><td id="val-hf">-- ms²</td></tr>
+                            <tr><td>LF/HF ratio</td><td id="val-lfhf">--</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Local Return Map (Poincaré Plot)</div>
+                <div id="chart-poincare" class="chart-container"></div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">Spectrum of RR Tachogram</div>
+                <div id="chart-psd" class="chart-container"></div>
+            </div>
+        </div>
+
+        <!-- Row 3: Segmentwise & Global Map -->
+        <div class="panel-row two-col">
+            <div class="panel">
+                <div class="panel-header">Segmentwise HRV & Trend</div>
+                <div id="chart-segment" class="chart-container"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-header">Global Return Map</div>
+                <div id="chart-global-return" class="chart-container"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- App Logic & Signal Processing -->
+    <script src="signalProcessing.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
